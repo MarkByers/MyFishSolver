@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HeyThatsMyFishSolver
 {
-    class Board
+    public class Board
     {
         public int[,] Fish = new int[8, 8];
         public int Score { get; set; }
@@ -157,7 +157,7 @@ namespace HeyThatsMyFishSolver
         }
     }
 
-    class Position
+    public class Position
     {
         public int Row { get; private set; }
         public int Column { get; private set; }
