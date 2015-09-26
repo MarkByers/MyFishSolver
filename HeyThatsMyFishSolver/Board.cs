@@ -12,11 +12,14 @@ namespace HeyThatsMyFishSolver
         public List<Position> Blue = new List<Position>();
         public List<Position> Red = new List<Position>();
 
-        public int Solve(bool opponentSkipped = false)
+        /// <summary>
+        /// Negamax with alpha beta pruning.
+        /// https://en.wikipedia.org/wiki/Negamax#Negamax_with_alpha_beta_pruning
+        /// </summary>
+        public int Solve(int alpha = -10000, int beta = 10000, bool opponentSkipped = false)
         {
             int bestScore = int.MinValue;
-            int bestPenguin = 0;
-            Position bestTarget;
+            Move bestMove;
 
             List<Move> moves = GetAvailableMoves().ToList();
 
@@ -25,7 +28,7 @@ namespace HeyThatsMyFishSolver
                 else
                 {
                     SwapSides();
-                    int result = -Solve(true);
+                    int result = -Solve(-beta, -alpha, true);
                     SwapSides();
                     return result;
                 }
@@ -44,21 +47,27 @@ namespace HeyThatsMyFishSolver
                 Blue[penguin] = target;
 
                 SwapSides();
-
-                int newScore = -Solve();
-                if (newScore > bestScore)
-                {
-                    bestScore = newScore;
-                    bestPenguin = penguin;
-                    bestTarget = target;
-                }
-
+                int newScore = -Solve(-beta, -alpha);
                 SwapSides();
 
+                // Undo the move.
                 Blue[penguin] = source;
                 Fish[target.Row, target.Column] = fish;
                 Score -= fish;
+
+                if (newScore > bestScore)
+                {
+                    bestScore = newScore;
+                    bestMove = move;
+
+                    if (newScore > alpha)
+                    {
+                        alpha = newScore;
+                        if (alpha >= beta) { break; }
+                    }
+                }
             }
+
 
             return bestScore;
         }
@@ -174,7 +183,7 @@ namespace HeyThatsMyFishSolver
         }
     }
 
-    class Move
+    public class Move
     {
         public int Penguin { get; set; }
         public Position Source { get; set; }

@@ -16,7 +16,7 @@ namespace MyFishSolverTest
 0 0 0 0 0 0 0 0");
 
             int score = board.Solve();
-            if (score != 2) { throw new Exception("Test failed"); }
+            Assert.AreEqual(2, score);
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace MyFishSolverTest
 ");
 
             int score = board.Solve();
-            if (score != -1) { throw new Exception("Test failed"); }
+            Assert.AreEqual(-1, score);
         }
 
         [TestMethod]
@@ -47,9 +47,10 @@ namespace MyFishSolverTest
 ");
 
             int score = board.Solve();
-            if (score != 1) { throw new Exception("Test failed"); }
+            Assert.AreEqual(1, score);
         }
 
+        [TestMethod]
         public void Test4()
         {
             Board board = ParseBoard(@"
@@ -63,7 +64,7 @@ namespace MyFishSolverTest
 ");
 
             int score = board.Solve();
-            if (score != 3) { throw new Exception("Test failed"); }
+            Assert.AreEqual(3, score);
         }
 
         [TestMethod]
@@ -80,7 +81,7 @@ namespace MyFishSolverTest
 ");
 
             int score = board.Solve();
-            if (score != 2) { throw new Exception("Test failed"); }
+            Assert.AreEqual(2, score);
         }
 
         [TestMethod]
@@ -97,7 +98,7 @@ namespace MyFishSolverTest
 ");
 
             int score = board.Solve();
-            if (score != 2) { throw new Exception("Test failed"); }
+            Assert.AreEqual(2, score);
         }
 
         [TestMethod]
@@ -114,9 +115,25 @@ namespace MyFishSolverTest
 ");
 
             int score = board.Solve();
-            if (score != -2) { throw new Exception("Test failed"); }
+            Assert.AreEqual(-2, score);
         }
 
+        [TestMethod]
+        public void Test8()
+        {
+            Board board = ParseBoard(@"
+0 0 0 0 0 0 0 0
+ 0 1 1 1 1 0 0 0
+0 1 1 R 1 1 0 0
+ 0 1 1 B 1 1 0 0
+0 1 1 1 1 1 0 0
+ 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+");
+
+            int score = board.Solve();
+            Assert.AreEqual(1, score);
+        }
 
         private Board ParseBoard(string p)
         {
@@ -145,10 +162,7 @@ namespace MyFishSolverTest
                 row++;
             }
             return board;
-
         }
     }
-
-
 
 }
