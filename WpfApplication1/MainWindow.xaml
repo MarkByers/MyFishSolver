@@ -1,0 +1,57 @@
+﻿<Window x:Class="WpfApplication1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApplication1"
+        xmlns:vm="clr-namespace:WpfApplication1.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+    <DockPanel>
+
+        <StackPanel DockPanel.Dock="Right">
+            <Button Command="{Binding SolveCommand}">Solve</Button>
+
+            <ListView ItemsSource="{Binding MoveScores}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Move" DisplayMemberBinding="{Binding Move}" Width="120"/>
+                        <GridViewColumn Header="Score" DisplayMemberBinding="{Binding Score}" Width="40"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+
+
+        <ItemsControl ItemsSource="{Binding Board.Tiles}" Width="400">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding Path=X}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Path=Y}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                    <Grid>
+                    <Path d:LayoutOverrides="None" 
+      d:LastTangent="0,0" Stroke="Blue" Fill="LightBlue" 
+      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+      Margin="0" Width="50" Height="50" x:Name="Path" 
+  Stretch="Fill" 
+      Data="M8.660254,0 L17.320508,5 17.320508,15 8.660254,20 0,15 0,5 8.660254,0 z"/>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Fish}"></TextBlock>
+                    </Grid>
+                </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+    </DockPanel>
+</Window>

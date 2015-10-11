@@ -10,7 +10,7 @@ namespace MyFishSolverTest
         [TestMethod]
         public void Test1()
         {
-            Board board = ParseBoard(@"
+            Solver board = ParseBoard(@"
 0 0 0 0 0 0 0 0
  0 0 B 1 1 R 0
 0 0 0 0 0 0 0 0");
@@ -22,7 +22,7 @@ namespace MyFishSolverTest
         [TestMethod]
         public void Test2()
         {
-            Board board = ParseBoard(@"
+            Solver board = ParseBoard(@"
 0 0 0 0 0 0 0 0
  0 B 0 0 0 0 0
 0 0 2 1 1 1 R 0
@@ -36,7 +36,7 @@ namespace MyFishSolverTest
         [TestMethod]
         public void Test3()
         {
-            Board board = ParseBoard(@"
+            Solver board = ParseBoard(@"
 0 0 0 0 0 0 0 0
  0 3 1 0 0 0 0 0
 0 B 0 R 0 0 0 0
@@ -53,7 +53,7 @@ namespace MyFishSolverTest
         [TestMethod]
         public void Test4()
         {
-            Board board = ParseBoard(@"
+            Solver board = ParseBoard(@"
 0 0 0 0 0 0 0 0
  0 1 0 0 0 0 0 0
 0 2 B 0 0 0 0 0
@@ -70,7 +70,7 @@ namespace MyFishSolverTest
         [TestMethod]
         public void Test5()
         {
-            Board board = ParseBoard(@"
+            Solver board = ParseBoard(@"
 0 0 0 0 0 0 0 0
  0 1 R 0 0 0 0 0
 0 2 B 1 0 0 0 0
@@ -87,7 +87,7 @@ namespace MyFishSolverTest
         [TestMethod]
         public void Test6()
         {
-            Board board = ParseBoard(@"
+            Solver board = ParseBoard(@"
 0 0 0 0 0 0 0 0
  0 1 R 0 0 0 0 0
 0 2 1 1 B 0 0 0
@@ -104,7 +104,7 @@ namespace MyFishSolverTest
         [TestMethod]
         public void Test7()
         {
-            Board board = ParseBoard(@"
+            Solver board = ParseBoard(@"
 0 0 0 0 0 0 0 0
  0 1 1 1 0 0 0 0
 0 1 1 R 1 0 0 0
@@ -121,7 +121,7 @@ namespace MyFishSolverTest
         [TestMethod]
         public void Test8()
         {
-            Board board = ParseBoard(@"
+            Solver board = ParseBoard(@"
 0 0 0 0 0 0 0 0
  0 1 1 1 1 0 0 0
 0 1 1 R 1 1 0 0
@@ -135,10 +135,28 @@ namespace MyFishSolverTest
             Assert.AreEqual(1, score);
         }
 
-        private Board ParseBoard(string p)
+        [TestMethod]
+        public void Test9()
+        {
+            Solver board = ParseBoard(@"
+0 0 0 0 0 0 0 0
+ 0 1 1 1 1 0 0 0
+0 1 1 R 1 1 0 0
+ 0 1 1 B 1 1 0 0
+0 1 1 1 1 1 0 0
+ 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+");
+
+            int score = board.Solve();
+            Assert.AreEqual(1, score);
+        }
+
+
+        private Solver ParseBoard(string p)
         {
             p = p.Trim().Replace(" ", "");
-            Board board = new Board();
+            Solver board = new Solver();
             int row = 0;
             foreach (string rowString in p.Split('\n'))
             {
@@ -164,5 +182,4 @@ namespace MyFishSolverTest
             return board;
         }
     }
-
 }

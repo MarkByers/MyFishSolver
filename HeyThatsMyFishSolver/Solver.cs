@@ -5,9 +5,9 @@ using System.Text;
 
 namespace HeyThatsMyFishSolver
 {
-    public class Board
+    public class Solver
     {
-        public int[,] Fish = new int[8, 8];
+        public int[,] Fish = new int[10, 10];
         public int Score { get; set; }
         public List<Position> Blue = new List<Position>();
         public List<Position> Red = new List<Position>();
@@ -36,24 +36,7 @@ namespace HeyThatsMyFishSolver
 
             foreach (Move move in moves)
             {
-                int penguin = move.Penguin;
-                Position source = move.Source;
-                Position target = move.Target;
-
-                // Play the move.
-                int fish = Fish[target.Row, target.Column];
-                Score += fish;
-                Fish[target.Row, target.Column] = 0;
-                Blue[penguin] = target;
-
-                SwapSides();
-                int newScore = -Solve(-beta, -alpha);
-                SwapSides();
-
-                // Undo the move.
-                Blue[penguin] = source;
-                Fish[target.Row, target.Column] = fish;
-                Score -= fish;
+                int newScore = EvaluateMove(move, alpha, beta);
 
                 if (newScore > bestScore)
                 {
@@ -68,8 +51,31 @@ namespace HeyThatsMyFishSolver
                 }
             }
 
-
             return bestScore;
+        }
+
+        private int EvaluateMove(Move move, int alpha = -10000, int beta = 10000)
+        {
+            int penguin = move.Penguin;
+            Position source = move.Source;
+            Position target = move.Target;
+
+            // Play the move.
+            int fish = Fish[target.Row, target.Column];
+            Score += fish;
+            Fish[target.Row, target.Column] = 0;
+            Blue[penguin] = target;
+
+            SwapSides();
+            int score = -Solve(-beta, -alpha);
+            SwapSides();
+
+            // Undo the move.
+            Blue[penguin] = source;
+            Fish[target.Row, target.Column] = fish;
+            Score -= fish;
+
+            return score;
         }
 
         private void SwapSides()
@@ -80,7 +86,14 @@ namespace HeyThatsMyFishSolver
             Score = -Score;
         }
 
-        private IEnumerable<Move> GetAvailableMoves()
+        public List<MoveScore> GetMoveScores()
+        {
+            return GetAvailableMoves()
+                .Select(move => new MoveScore { Move = move, Score = EvaluateMove(move) })
+                .ToList();
+        }
+
+        public IEnumerable<Move> GetAvailableMoves()
         {
             for (int penguin = 0; penguin < Blue.Count; ++penguin)
             {
