@@ -1,13 +1,12 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using HeyThatsMyFishSolver;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using HeyThatsMyFishSolver;
+using HeyThatsMyFishWpf.Model;
 
-namespace WpfApplication1.ViewModel
+namespace HeyThatsMyFishWpf.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
@@ -40,10 +39,10 @@ namespace WpfApplication1.ViewModel
         {
             p = p.Trim().Replace(" ", "");
             List<Tile> tiles = new List<Tile>();
-            int row = 0;
+            int row = 1;
             foreach (string rowString in p.Split('\n'))
             {
-                int column = 0;
+                int column = 1;
                 foreach (char c in rowString)
                 {
                     if (c >= '1' && c <= '3')
@@ -70,7 +69,7 @@ namespace WpfApplication1.ViewModel
             Solver solver = new Solver();
             foreach (Tile tile in Board.Tiles)
             {
-                solver.Fish[tile.Row + 1, tile.Column + 1] = tile.Fish;
+                solver.Fish[tile.Row, tile.Column] = tile.Fish;
             }
             solver.Blue = Board.BluePenguins;
             solver.Red = Board.RedPenguins;
@@ -84,6 +83,27 @@ namespace WpfApplication1.ViewModel
         }
 
         public Board Board { get; set; }
+
+        public void UnhighlightMove(Move move)
+        {
+            Tile source = GetTile(move.Source);
+            source.IsHighlighted = false;
+            Tile target = GetTile(move.Target);
+            target.IsHighlighted = false;
+        }
+
+        public void HighlightMove(Move move)
+        {
+            Tile source = GetTile(move.Source);
+            source.IsHighlighted = true;
+            Tile target = GetTile(move.Target);
+            target.IsHighlighted = true;
+        }
+
+        private Tile GetTile(Position position)
+        {
+            return Board.Tiles.Single(t => t.Row == position.Row && t.Column == position.Column);
+        }
 
         #region List<MoveScore> MoveScores
 
@@ -111,40 +131,5 @@ namespace WpfApplication1.ViewModel
         }
 
         #endregion
-    }
-
-    public class Board
-    {
-        public List<Tile> Tiles { get; set; }
-
-        public List<Position> BluePenguins { get; set; }
-
-        public List<Position> RedPenguins { get; set; }
-    }
-
-    public class Tile
-    {
-        public int Row { get; set; }
-        public int Column { get; set; }
-        public int Fish { get; set; }
-
-        private int tileSize = 50;
-
-        public int X
-        {
-            get
-            {
-                return tileSize * Column + tileSize / 2 * ((Row + 1) % 2);
-            }
-        }
-
-        
-        public int Y
-        {
-            get
-            {
-                return ((int)(tileSize * 0.74)) * Row;
-            }
-        }
     }
 }
