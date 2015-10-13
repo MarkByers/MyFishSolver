@@ -86,11 +86,10 @@ namespace HeyThatsMyFishSolver
             Score = -Score;
         }
 
-        public List<MoveScore> GetMoveScores()
+        public IEnumerable<MoveScore> GetMoveScores()
         {
             return GetAvailableMoves()
-                .Select(move => new MoveScore { Move = move, Score = EvaluateMove(move) })
-                .ToList();
+                .Select(move => new MoveScore { Move = move, Score = EvaluateMove(move) });
         }
 
         public IEnumerable<Move> GetAvailableMoves()

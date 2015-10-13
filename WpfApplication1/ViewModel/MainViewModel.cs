@@ -33,6 +33,16 @@ namespace HeyThatsMyFishWpf.ViewModel
                 BluePenguins = new List<Position> { new Position(2, 1), new Position(5, 2) },
                 RedPenguins = new List<Position> { new Position(2, 3), new Position(5, 5) }
             };
+
+            foreach (Position position in Board.BluePenguins)
+            {
+                GetTile(position).Penguin = 1;
+            }
+
+            foreach (Position position in Board.RedPenguins)
+            {
+                GetTile(position).Penguin = 2;
+            }
         }
 
         private List<Tile> ParseBoard(string p)
@@ -79,7 +89,7 @@ namespace HeyThatsMyFishWpf.ViewModel
                 solver.Fish[penguin.Row, penguin.Column] = 0;
             }
 
-            MoveScores = solver.GetMoveScores();
+            MoveScores = solver.GetMoveScores().OrderByDescending(x => x.Score).ToList();
         }
 
         public Board Board { get; set; }

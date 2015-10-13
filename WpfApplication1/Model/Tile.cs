@@ -12,6 +12,7 @@ namespace HeyThatsMyFishWpf.Model
         public int Row { get; set; }
         public int Column { get; set; }
         public int Fish { get; set; }
+        public int Penguin { get; set; }
 
         #region bool IsHighlighted
 
@@ -46,7 +47,7 @@ namespace HeyThatsMyFishWpf.Model
         {
             get
             {
-                return tileSize * Column + tileSize / 2 * (Row % 2);
+                return (tileSize - 1) * Column + (tileSize) / 2 * (Row % 2);
             }
         }
 

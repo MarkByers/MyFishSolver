@@ -40,12 +40,14 @@
                     <Canvas />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
                     <Setter Property="Canvas.Left" Value="{Binding Path=X}" />
                     <Setter Property="Canvas.Top" Value="{Binding Path=Y}" />
                 </Style>
             </ItemsControl.ItemContainerStyle>
+            
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -61,6 +63,23 @@
                                 </Style>
                             </Path.Style>
                         </Path>
+
+                        <Ellipse Width="30" Height="30">
+                            <Ellipse.Style>
+                                <Style TargetType="{x:Type Ellipse}">
+                                    <Setter Property="Fill" Value="Transparent"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Penguin}" Value="1">
+                                            <Setter Property="Fill" Value="Red"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Penguin}" Value="2">
+                                            <Setter Property="Fill" Value="Blue"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Fish}"/>
                     </Grid>
                 </DataTemplate>
