@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 
 namespace HeyThatsMyFishWpf.Model
 {
@@ -12,7 +13,55 @@ namespace HeyThatsMyFishWpf.Model
         public int Row { get; set; }
         public int Column { get; set; }
         public int Fish { get; set; }
-        public int Penguin { get; set; }
+
+        #region int Penguin
+
+        /// <summary>
+        /// The <see cref="Penguin" /> property's name.
+        /// </summary>
+        public const string PenguinPropertyName = "Penguin";
+
+        private int _penguin = 0;
+
+        /// <summary>
+        /// Sets and gets the Penguin property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public int Penguin
+        {
+            get
+            {
+                return _penguin;
+            }
+
+            set
+            {
+                if (_penguin == value)
+                {
+                    return;
+                }
+
+                _penguin = value;
+                RaisePropertyChanged(() => Penguin);
+            }
+        }
+
+        #endregion
+
+        public RelayCommand SelectCommand { get; set; }
+
+        private Board board;
+
+        public Tile(Board board)
+        {
+            this.board = board;
+            SelectCommand = new RelayCommand(Select);
+        }
+
+        private void Select()
+        {
+            board.SelectTile(this);
+        }
 
         #region bool IsHighlighted
 
@@ -38,8 +87,35 @@ namespace HeyThatsMyFishWpf.Model
                 Set(() => IsHighlighted, ref _isHighlighted, value);
             }
         }
-        
-        #endregion 
+
+        #endregion
+
+        #region bool IsSelected
+
+        /// <summary>
+        /// The <see cref="IsSelected" /> property's name.
+        /// </summary>
+        public const string IsSelectedPropertyName = "IsSelected";
+
+        private bool _isSelected = false;
+
+        /// <summary>
+        /// Sets and gets the IsSelected property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                Set(() => IsSelected, ref _isSelected, value);
+            }
+        }
+
+        #endregion
 
         private int tileSize = 50;
 

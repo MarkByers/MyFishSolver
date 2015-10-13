@@ -5,6 +5,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using HeyThatsMyFishSolver;
 using HeyThatsMyFishWpf.Model;
+using System.Collections.ObjectModel;
 
 namespace HeyThatsMyFishWpf.ViewModel
 {
@@ -20,33 +21,19 @@ namespace HeyThatsMyFishWpf.ViewModel
 
         private void CreateBoard()
         {
-            List<Tile> tiles = ParseBoard(@"
+            Board = ParseBoard(@"
  3 1 0 0 0
-1 0 1 0 0 0
+B 0 R 0 0 0
  3 1 0 0 0
-0 0 0 0 0 3
- 3 1 1 1 1
+0 0 0 0 3 0
+ B 1 1 R 0
+3 0 0 0 0 0
 ");
-            Board = new Board
-            {
-                Tiles = tiles,
-                BluePenguins = new List<Position> { new Position(2, 1), new Position(5, 2) },
-                RedPenguins = new List<Position> { new Position(2, 3), new Position(5, 5) }
-            };
-
-            foreach (Position position in Board.BluePenguins)
-            {
-                GetTile(position).Penguin = 1;
-            }
-
-            foreach (Position position in Board.RedPenguins)
-            {
-                GetTile(position).Penguin = 2;
-            }
         }
 
-        private List<Tile> ParseBoard(string p)
+        private Board ParseBoard(string p)
         {
+            Board board = new Board();
             p = p.Trim().Replace(" ", "");
             List<Tile> tiles = new List<Tile>();
             int row = 1;
@@ -57,38 +44,27 @@ namespace HeyThatsMyFishWpf.ViewModel
                 {
                     if (c >= '1' && c <= '3')
                     {
-                        tiles.Add(new Tile { Row = row, Column = column, Fish = c - '0' });
+                        tiles.Add(new Tile(board) { Row = row, Column = column, Fish = c - '0' });
                     }
                     else if (c == 'B')
                     {
-                        //board.Blue.Add(new Position(row, column));
+                        tiles.Add(new Tile(board) { Row = row, Column = column, Fish = 1, Penguin = 1 });
                     }
                     else if (c == 'R')
                     {
-                        //board.Red.Add(new Position(row, column));
+                        tiles.Add(new Tile(board) { Row = row, Column = column, Fish = 1, Penguin = 2 });
                     }
                     column++;
                 }
                 row++;
             }
-            return tiles;
+            board.Tiles = new ObservableCollection<Tile>(tiles);
+            return board;
         }
 
         private void Solve()
         {
-            Solver solver = new Solver();
-            foreach (Tile tile in Board.Tiles)
-            {
-                solver.Fish[tile.Row, tile.Column] = tile.Fish;
-            }
-            solver.Blue = Board.BluePenguins;
-            solver.Red = Board.RedPenguins;
-
-            foreach (Position penguin in solver.Blue.Concat(solver.Red))
-            {
-                solver.Fish[penguin.Row, penguin.Column] = 0;
-            }
-
+            Solver solver = Board.CreateSolver();
             MoveScores = solver.GetMoveScores().OrderByDescending(x => x.Score).ToList();
         }
 
@@ -96,23 +72,18 @@ namespace HeyThatsMyFishWpf.ViewModel
 
         public void UnhighlightMove(Move move)
         {
-            Tile source = GetTile(move.Source);
+            Tile source = Board.GetTile(move.Source);
             source.IsHighlighted = false;
-            Tile target = GetTile(move.Target);
+            Tile target = Board.GetTile(move.Target);
             target.IsHighlighted = false;
         }
 
         public void HighlightMove(Move move)
         {
-            Tile source = GetTile(move.Source);
+            Tile source = Board.GetTile(move.Source);
             source.IsHighlighted = true;
-            Tile target = GetTile(move.Target);
+            Tile target = Board.GetTile(move.Target);
             target.IsHighlighted = true;
-        }
-
-        private Tile GetTile(Position position)
-        {
-            return Board.Tiles.Single(t => t.Row == position.Row && t.Column == position.Column);
         }
 
         #region List<MoveScore> MoveScores

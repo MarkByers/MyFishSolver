@@ -78,7 +78,7 @@ namespace HeyThatsMyFishSolver
             return score;
         }
 
-        private void SwapSides()
+        public void SwapSides()
         {
             List<Position> temp = Blue;
             Blue = Red;

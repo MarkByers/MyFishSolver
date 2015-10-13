@@ -33,7 +33,12 @@
             
         </StackPanel>
 
-
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <TextBlock>Score: </TextBlock>
+            <TextBlock Text="{Binding Board.BlueScore}" />
+            <TextBlock>-</TextBlock>
+            <TextBlock Text="{Binding Board.RedScore}" />
+        </StackPanel>
         <ItemsControl ItemsSource="{Binding Board.Tiles}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -50,38 +55,49 @@
             
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Path d:LayoutOverrides="None" d:LastTangent="0,0" Stroke="Blue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Width="50" Height="50" x:Name="Path" Stretch="Fill" Data="M8.660254,0 L17.320508,5 17.320508,15 8.660254,20 0,15 0,5 8.660254,0 z">
-                            <Path.Style>
-                                <Style TargetType="{x:Type Path}">
-                                    <Setter Property="Fill" Value="LightBlue"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsHighlighted}" Value="True">
-                                            <Setter Property="Fill" Value="Yellow"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Path.Style>
-                        </Path>
+                        <Button Command="{Binding SelectCommand}">
+                            <Button.Template>
+                                <ControlTemplate>
+                                <Grid>
+                                    <Path d:LayoutOverrides="None" d:LastTangent="0,0" Stroke="Blue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Width="50" Height="50" x:Name="Path" Stretch="Fill" Data="M8.660254,0 L17.320508,5 17.320508,15 8.660254,20 0,15 0,5 8.660254,0 z">
+                                        <Path.Style>
+                                            <Style TargetType="{x:Type Path}">
+                                                <Setter Property="Fill" Value="LightBlue"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsHighlighted}" Value="True">
+                                                        <Setter Property="Fill" Value="Yellow"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Path.Style>
+                                    </Path>
 
-                        <Ellipse Width="30" Height="30">
-                            <Ellipse.Style>
-                                <Style TargetType="{x:Type Ellipse}">
-                                    <Setter Property="Fill" Value="Transparent"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Penguin}" Value="1">
-                                            <Setter Property="Fill" Value="Red"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Penguin}" Value="2">
-                                            <Setter Property="Fill" Value="Blue"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Ellipse.Style>
-                        </Ellipse>
-                        
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Fish}"/>
+                                    <Ellipse Width="30" Height="30">
+                                        <Ellipse.Style>
+                                            <Style TargetType="{x:Type Ellipse}">
+                                                <Setter Property="Fill" Value="Transparent"/>
+                                                <Setter Property="Stroke" Value="Transparent"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Penguin}" Value="1">
+                                                        <Setter Property="Fill" Value="Red"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Penguin}" Value="2">
+                                                        <Setter Property="Fill" Value="Blue"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                        <Setter Property="Stroke" Value="Yellow"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Fish}"/>
                     </Grid>
+
+                    </ControlTemplate>
+                            </Button.Template>
+                        </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
