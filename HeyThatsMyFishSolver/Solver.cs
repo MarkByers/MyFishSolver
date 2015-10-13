@@ -92,6 +92,19 @@ namespace HeyThatsMyFishSolver
                 .Select(move => new MoveScore { Move = move, Score = EvaluateMove(move) });
         }
 
+        public IEnumerable<Position> GetDeadPenguins()
+        {
+            IEnumerable<Move> moves = GetAvailableMoves();
+            var livePenguins = moves.Select(m => m.Penguin).Distinct().ToDictionary(x => x);
+            for (int penguin = 0; penguin < Blue.Count; ++penguin)
+            {
+                if (!livePenguins.ContainsKey(penguin))
+                {
+                    yield return Blue[penguin];
+                }
+            }
+        }
+
         public IEnumerable<Move> GetAvailableMoves()
         {
             for (int penguin = 0; penguin < Blue.Count; ++penguin)

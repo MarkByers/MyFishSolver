@@ -96,28 +96,55 @@ namespace HeyThatsMyFishWpf.Model
 
         private void PlayComputerMove()
         {
-            Solver solver = CreateSolver();
-            solver.SwapSides();
-
-            // Get the best move.
-            Move move = solver.GetMoveScores()
-                .OrderByDescending(x => x.Score)
-                .Select(x => x.Move)
-                .FirstOrDefault();
-
-            if (move != null)
+            while (true)
             {
+                Solver solver = CreateSolver();
+                solver.SwapSides();
+
+                // Get the best move.
+                Move move = solver.GetMoveScores()
+                    .OrderByDescending(x => x.Score)
+                    .Select(x => x.Move)
+                    .FirstOrDefault();
+
+                if (move == null)
+                {
+                    break;
+                }
+                
                 // Play the move.
                 Tiles.Remove(GetTile(move.Source));
                 Tile target = GetTile(move.Target);
                 target.Penguin = 2;
                 RedScore += target.Fish;
+                
+                // If the opponent has no legal move, then move again.
+                solver = CreateSolver();
+                if (solver.GetAvailableMoves().Any())
+                {
+                    break;
+                }
             }
 
-            // TODO: If human has no valid moves, move again.
+            RemoveDeadPenguins();
+
             // If neither player can move, end the game.
 
             // TODO: Remove tiles that are not connected to any other tile.
+        }
+
+        private void RemoveDeadPenguins()
+        {
+            Solver solver = CreateSolver();
+            foreach (Position penguin in solver.GetDeadPenguins())
+            {
+                Tiles.Remove(GetTile(penguin));
+            }
+            solver.SwapSides();
+            foreach (Position penguin in solver.GetDeadPenguins())
+            {
+                Tiles.Remove(GetTile(penguin));
+            }
         }
 
         public Tile GetTile(Position position)
