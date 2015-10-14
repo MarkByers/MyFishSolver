@@ -10,9 +10,11 @@
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
-    <DockPanel>
 
+    <DockPanel>
         <StackPanel DockPanel.Dock="Right">
+            <Button Command="{Binding EditBoardCommand}">Edit Board</Button>
+            <TextBox AcceptsReturn="True" Text="{Binding BoardText}" />
             <Button Command="{Binding SolveCommand}">Solve</Button>
 
             <ListView ItemsSource="{Binding MoveScores}">
@@ -39,6 +41,7 @@
             <TextBlock>-</TextBlock>
             <TextBlock Text="{Binding Board.RedScore}" />
         </StackPanel>
+        
         <ItemsControl ItemsSource="{Binding Board.Tiles}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

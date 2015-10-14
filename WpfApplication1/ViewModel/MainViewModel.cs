@@ -6,29 +6,93 @@ using GalaSoft.MvvmLight.Command;
 using HeyThatsMyFishSolver;
 using HeyThatsMyFishWpf.Model;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace HeyThatsMyFishWpf.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        public RelayCommand EditBoardCommand { get; set; }
         public RelayCommand SolveCommand { get; set; }
 
         public MainViewModel()
         {
             SolveCommand = new RelayCommand(Solve);
+            EditBoardCommand = new RelayCommand(EditBoard);
             CreateBoard();
         }
+
+        #region Board Board
+
+        /// <summary>
+        /// The <see cref="Board" /> property's name.
+        /// </summary>
+        public const string BoardPropertyName = "Board";
+
+        private Board _board = null;
+
+        /// <summary>
+        /// Sets and gets the Board property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public Board Board
+        {
+            get
+            {
+                return _board;
+            }
+            set
+            {
+                Set(() => Board, ref _board, value);
+                Board.PropertyChanged += Board_PropertyChanged;
+                MoveScores = new List<MoveScore>();
+            }
+        }
+
+        #endregion
+
+        #region string BoardText
+
+        /// <summary>
+        /// The <see cref="BoardText" /> property's name.
+        /// </summary>
+        public const string BoardTextPropertyName = "BoardText";
+
+        private string _boardText = "";
+
+        /// <summary>
+        /// Sets and gets the BoardText property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string BoardText
+        {
+            get
+            {
+                return _boardText;
+            }
+            set
+            {
+                Set(() => BoardText, ref _boardText, value);
+            }
+        }
+        
+        #endregion
 
         private void CreateBoard()
         {
             Board = ParseBoard(@"
  3 1 0 0 0
-B 0 R 0 0 0
+R 0 B 0 0 0
  3 1 0 0 0
 0 0 0 0 3 0
- B 1 1 R 0
+ R 1 1 B 0
 3 0 0 0 0 0
 ");
+        }
+
+        private void Board_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            MoveScores = new List<MoveScore>();
         }
 
         private Board ParseBoard(string p)
@@ -46,11 +110,11 @@ B 0 R 0 0 0
                     {
                         tiles.Add(new Tile(board) { Row = row, Column = column, Fish = c - '0' });
                     }
-                    else if (c == 'B')
+                    else if (c == 'R')
                     {
                         tiles.Add(new Tile(board) { Row = row, Column = column, Fish = 1, Penguin = 1 });
                     }
-                    else if (c == 'R')
+                    else if (c == 'B')
                     {
                         tiles.Add(new Tile(board) { Row = row, Column = column, Fish = 1, Penguin = 2 });
                     }
@@ -68,7 +132,10 @@ B 0 R 0 0 0
             MoveScores = solver.GetMoveScores().OrderByDescending(x => x.Score).ToList();
         }
 
-        public Board Board { get; set; }
+        private void EditBoard()
+        {
+            Board = ParseBoard(BoardText);
+        }
 
         public void UnhighlightMove(Move move)
         {

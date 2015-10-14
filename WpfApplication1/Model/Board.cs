@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using HeyThatsMyFishSolver;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
+using HeyThatsMyFishWpf.ViewModel;
 
 namespace HeyThatsMyFishWpf.Model
 {
@@ -86,7 +88,14 @@ namespace HeyThatsMyFishWpf.Model
                 // Computer's turn!
                 PlayComputerMove();
 
+                RemoveDeadPenguins();
+
+                // If neither player can move, end the game.
+
+                // TODO: Remove tiles that are not connected to any other tile.
+
                 // TODO: Remove solve results.
+                
             }
             else
             {
@@ -125,12 +134,6 @@ namespace HeyThatsMyFishWpf.Model
                     break;
                 }
             }
-
-            RemoveDeadPenguins();
-
-            // If neither player can move, end the game.
-
-            // TODO: Remove tiles that are not connected to any other tile.
         }
 
         private void RemoveDeadPenguins()
