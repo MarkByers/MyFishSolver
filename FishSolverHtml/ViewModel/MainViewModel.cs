@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using HeyThatsMyFishSolver;
-using HeyThatsMyFishWpf.Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using FishSolverHtml.Helpers;
+using FishSolverHtml.Model;
 
-namespace HeyThatsMyFishWpf.ViewModel
+namespace FishSolverHtml.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ObservableObject
     {
         public RelayCommand LoadBoardCommand { get; set; }
         public RelayCommand SolveCommand { get; set; }
@@ -24,28 +23,19 @@ namespace HeyThatsMyFishWpf.ViewModel
 
         #region Board Board
 
-        /// <summary>
-        /// The <see cref="Board" /> property's name.
-        /// </summary>
-        public const string BoardPropertyName = "Board";
-
         private Board _board = null;
-
-        /// <summary>
-        /// Sets and gets the Board property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
         public Board Board
         {
-            get
-            {
-                return _board;
-            }
+            get { return _board; }
             set
             {
-                Set(() => Board, ref _board, value);
-                Board.PropertyChanged += Board_PropertyChanged;
-                MoveScores = new List<MoveScore>();
+                if (_board != value)
+                {
+                    _board = value;
+                    NotifyPropertyChanged("Board");
+                    Board.PropertyChanged += Board_PropertyChanged;
+                    MoveScores = new List<MoveScore>();
+                }
             }
         }
 
@@ -53,17 +43,8 @@ namespace HeyThatsMyFishWpf.ViewModel
 
         #region string BoardText
 
-        /// <summary>
-        /// The <see cref="BoardText" /> property's name.
-        /// </summary>
-        public const string BoardTextPropertyName = "BoardText";
-
         private string _boardText = "";
 
-        /// <summary>
-        /// Sets and gets the BoardText property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
         public string BoardText
         {
             get
@@ -72,7 +53,11 @@ namespace HeyThatsMyFishWpf.ViewModel
             }
             set
             {
-                Set(() => BoardText, ref _boardText, value);
+                if (_boardText != value)
+                {
+                    _boardText = value;
+                    NotifyPropertyChanged("BoardText");
+                }
             }
         }
         
@@ -155,11 +140,6 @@ R 0 B 0 0 0
 
         #region List<MoveScore> MoveScores
 
-        /// <summary>
-        /// The <see cref="MoveScores" /> property's name.
-        /// </summary>
-        public const string MoveScoresPropertyName = "MoveScores";
-
         private List<MoveScore> _moveScores = new List<MoveScore>();
 
         /// <summary>
@@ -174,7 +154,11 @@ R 0 B 0 0 0
             }
             set
             {
-                Set(() => MoveScores, ref _moveScores, value);
+                if (_moveScores != value)
+                {
+                    _moveScores = value;
+                    NotifyPropertyChanged("MoveScores");
+                }
             }
         }
 

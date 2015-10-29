@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using HeyThatsMyFishSolver;
+using System.Collections.Generic;
 
 namespace MyFishSolverTest
 {
@@ -158,6 +159,8 @@ namespace MyFishSolverTest
             p = p.Trim().Replace(" ", "");
             Solver board = new Solver();
             int row = 0;
+            List<Position> blue = new List<Position>();
+            List<Position> red = new List<Position>();
             foreach (string rowString in p.Split('\n'))
             {
                 int column = 0;
@@ -165,20 +168,22 @@ namespace MyFishSolverTest
                 {
                     if (c >= '1' && c <= '3')
                     {
-                        board.Fish[row, column] = c - '0';
+                        board.Fish[row][column] = c - '0';
                     }
                     else if (c == 'B')
                     {
-                        board.Blue.Add(new Position(row, column));
+                        blue.Add(new Position(row, column));
                     }
                     else if (c == 'R')
                     {
-                        board.Red.Add(new Position(row, column));
+                        red.Add(new Position(row, column));
                     }
                     column++;
                 }
                 row++;
             }
+            board.Blue = blue.ToArray();
+            board.Red = red.ToArray();
             return board;
         }
     }

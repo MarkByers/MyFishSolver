@@ -7,10 +7,10 @@ namespace HeyThatsMyFishSolver
 {
     public class Solver
     {
-        public int[,] Fish = new int[10, 10];
+        public int[][] Fish = { new int[10], new int[10], new int[10], new int[10], new int[10], new int[10], new int[10], new int[10], new int[10], new int[10] };
         public int Score { get; set; }
-        public List<Position> Blue = new List<Position>();
-        public List<Position> Red = new List<Position>();
+        public Position[] Blue = new Position[0];
+        public Position[] Red = new Position[0];
 
         /// <summary>
         /// Negamax with alpha beta pruning.
@@ -61,9 +61,9 @@ namespace HeyThatsMyFishSolver
             Position target = move.Target;
 
             // Play the move.
-            int fish = Fish[target.Row, target.Column];
+            int fish = Fish[target.Row][target.Column];
             Score += fish;
-            Fish[target.Row, target.Column] = 0;
+            Fish[target.Row][target.Column] = 0;
             Blue[penguin] = target;
 
             SwapSides();
@@ -72,7 +72,7 @@ namespace HeyThatsMyFishSolver
 
             // Undo the move.
             Blue[penguin] = source;
-            Fish[target.Row, target.Column] = fish;
+            Fish[target.Row][target.Column] = fish;
             Score -= fish;
 
             return score;
@@ -80,7 +80,7 @@ namespace HeyThatsMyFishSolver
 
         public void SwapSides()
         {
-            List<Position> temp = Blue;
+            var temp = Blue;
             Blue = Red;
             Red = temp;
             Score = -Score;
@@ -96,7 +96,7 @@ namespace HeyThatsMyFishSolver
         {
             IEnumerable<Move> moves = GetAvailableMoves();
             var livePenguins = moves.Select(m => m.Penguin).Distinct().ToDictionary(x => x);
-            for (int penguin = 0; penguin < Blue.Count; ++penguin)
+            for (int penguin = 0; penguin < Blue.Length; ++penguin)
             {
                 if (!livePenguins.ContainsKey(penguin))
                 {
@@ -107,12 +107,12 @@ namespace HeyThatsMyFishSolver
 
         public IEnumerable<Move> GetAvailableMoves()
         {
-            for (int penguin = 0; penguin < Blue.Count; ++penguin)
+            for (int penguin = 0; penguin < Blue.Length; ++penguin)
             {
                 // Right
                 int row = Blue[penguin].Row;
                 int column = Blue[penguin].Column;
-                while (Fish[row, column + 1] > 0)
+                while (Fish[row][column + 1] > 0)
                 {
                     column++;
                     yield return new Move { Penguin = penguin, Source = Blue[penguin], Target = new Position(row, column) };
@@ -121,7 +121,7 @@ namespace HeyThatsMyFishSolver
                 // Left
                 row = Blue[penguin].Row;
                 column = Blue[penguin].Column;
-                while (Fish[row, column - 1] > 0)
+                while (Fish[row][column - 1] > 0)
                 {
                     column--;
                     yield return new Move { Penguin = penguin, Source = Blue[penguin], Target = new Position(row, column) };
@@ -130,7 +130,7 @@ namespace HeyThatsMyFishSolver
                 // Down+right
                 row = Blue[penguin].Row;
                 column = Blue[penguin].Column;
-                while (Fish[row + 1, column + (row % 2)] > 0)
+                while (Fish[row + 1][column + (row % 2)] > 0)
                 {
                     column += (row % 2);
                     row += 1;
@@ -140,7 +140,7 @@ namespace HeyThatsMyFishSolver
                 // Down+left
                 row = Blue[penguin].Row;
                 column = Blue[penguin].Column;
-                while (Fish[row + 1, column + (row % 2) - 1] > 0)
+                while (Fish[row + 1][column + (row % 2) - 1] > 0)
                 {
                     column += (row % 2) - 1;
                     row += 1;
@@ -150,7 +150,7 @@ namespace HeyThatsMyFishSolver
                 // Up+right
                 row = Blue[penguin].Row;
                 column = Blue[penguin].Column;
-                while (Fish[row - 1, column + (row % 2)] > 0)
+                while (Fish[row - 1][column + (row % 2)] > 0)
                 {
                     column += (row % 2);
                     row -= 1;
@@ -160,7 +160,7 @@ namespace HeyThatsMyFishSolver
                 // Up+left
                 row = Blue[penguin].Row;
                 column = Blue[penguin].Column;
-                while (Fish[row - 1, column + (row % 2) - 1] > 0)
+                while (Fish[row - 1][column + (row % 2) - 1] > 0)
                 {
                     column += (row % 2) - 1;
                     row -= 1;
@@ -182,7 +182,7 @@ namespace HeyThatsMyFishSolver
                 {
                     string c =  Blue.Any(p => p.Column == column && p.Row == row) ? "B" :
                                 Red.Any(p => p.Column == column && p.Row == row) ? "R":
-                                Fish[row, column].ToString();
+                                Fish[row][column].ToString();
                     sb.Append(c + " ");
                 }
                 sb.AppendLine();
@@ -216,7 +216,7 @@ namespace HeyThatsMyFishSolver
 
         public override string ToString()
         {
-            return string.Format("P{0} {1}->{2})", Penguin, Source, Target);
+            return string.Format("{1}->{2}", Penguin, Source, Target);
         }
     }
 }

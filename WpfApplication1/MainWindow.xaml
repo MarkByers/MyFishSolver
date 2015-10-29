@@ -13,7 +13,7 @@
 
     <DockPanel>
         <StackPanel DockPanel.Dock="Right">
-            <Button Command="{Binding EditBoardCommand}">Edit Board</Button>
+            <Button Command="{Binding LoadBoardCommand}" Content="Load Board"/>
             <TextBox AcceptsReturn="True" Text="{Binding BoardText}" />
             <Button Command="{Binding SolveCommand}">Solve</Button>
 

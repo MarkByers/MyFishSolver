@@ -3,27 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using HeyThatsMyFishSolver;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
-using HeyThatsMyFishWpf.ViewModel;
+using FishSolverHtml.ViewModel;
+using System.ComponentModel;
+using FishSolverHtml.Helpers;
 
-namespace HeyThatsMyFishWpf.Model
+namespace FishSolverHtml.Model
 {
     public class Board : ObservableObject
     {
         #region int RedScore
-
-        /// <summary>
-        /// The <see cref="RedScore" /> property's name.
-        /// </summary>
-        public const string RedScorePropertyName = "RedScore";
-
+        
         private int _redScore = 0;
 
-        /// <summary>
-        /// Sets and gets the RedScore property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
         public int RedScore
         {
             get
@@ -32,18 +23,17 @@ namespace HeyThatsMyFishWpf.Model
             }
             set
             {
-                Set(() => RedScore, ref _redScore, value);
+                if (_redScore != value)
+                {
+                    _redScore = value;
+                    NotifyPropertyChanged("RedScore");
+                }
             }
         }
 
         #endregion
 
         #region int BlueScore
-
-        /// <summary>
-        /// The <see cref="BlueScore" /> property's name.
-        /// </summary>
-        public const string BlueScorePropertyName = "BlueScore";
 
         private int _blueScore = 0;
 
@@ -59,7 +49,11 @@ namespace HeyThatsMyFishWpf.Model
             }
             set
             {
-                Set(() => BlueScore, ref _blueScore, value);
+                if (_blueScore != value)
+                {
+                    _blueScore = value;
+                    NotifyPropertyChanged("BlueScore");
+                }
             }
         }
 
@@ -171,11 +165,15 @@ namespace HeyThatsMyFishWpf.Model
             {
                 solver.Fish[tile.Row][tile.Column] = tile.Fish;
             }
-            
             solver.Blue = Tiles.Where(tile => tile.Penguin == 1).Select(tile => new Position(tile.Row, tile.Column)).ToArray();
             solver.Red = Tiles.Where(tile => tile.Penguin == 2).Select(tile => new Position(tile.Row, tile.Column)).ToArray();
 
-            foreach (Position penguin in solver.Blue.Concat(solver.Red))
+            foreach (Position penguin in solver.Blue)
+            {
+                solver.Fish[penguin.Row][penguin.Column] = 0;
+            }
+
+            foreach (Position penguin in solver.Red)
             {
                 solver.Fish[penguin.Row][penguin.Column] = 0;
             }
